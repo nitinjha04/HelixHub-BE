@@ -27,26 +27,50 @@ const Schema = new mongoose.Schema(
         type: String,
       },
     },
+    dob: {
+      type: String,
+    },
+    pob: {
+      type: String,
+    },
+    phone: {
+      type: Number,
+    },
     email: {
       type: String,
       unique: true,
     },
-    role: {
-      type: String,
-      enum: ["Admin", "User"],
-      default: "User",
-    },
-    password: {
+    address: {
       type: String,
     },
-    //   otp: {
-    //     email: {
-    //       type: String,
-    //     },
-    //     phone: {
-    //       type: String,
-    //     },
-    //   },
+    parentName: {
+      first: String,
+      last: String,
+    },
+    parentEmail: {
+      type: String,
+    },
+    parentPhone: {
+      type: String,
+    },
+    parentAddress: {
+      type: String,
+    },
+    university: {
+      type: String,
+    },
+    degreeStartDate: {
+      type: String,
+    },
+    degreeEndDate: {
+      type: String,
+    },
+    degree: {
+      type: String,
+    },
+    universityCity: {
+      type: String,
+    },
   },
   {
     timestamps: true,
@@ -69,17 +93,17 @@ Schema.pre("save", async function (next) {
   next();
 });
 
-const virtual = Schema.virtual("id");
-virtual.get(function () {
-  return this._id;
-});
-Schema.set("toJSON", {
-  virtuals: true,
-  versionKey: false,
-  transform: function (doc, ret) {
-    delete ret._id;
-  },
-});
+// const virtual = Schema.virtual("id");
+// virtual.get(function () {
+//   return this._id;
+// });
+// Schema.set("toJSON", {
+//   virtuals: true,
+//   versionKey: false,
+//   transform: function (doc, ret) {
+//     delete ret._id;
+//   },
+// });
 
 Schema.methods.comparePassword = function (candidatePassword) {
   return new Promise((resolve, reject) => {

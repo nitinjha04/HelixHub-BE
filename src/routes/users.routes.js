@@ -14,6 +14,6 @@ router.post("/login", UserController.loginViaPassword);
 router.post("/register", UserController.createNewUser);
 
 //put requests
-router.put("/update", [Auth], UserController.editCurrentUser);
+router.put("/update/:id",  UserController.editCurrentUser);
 
 module.exports.UserRouter = router;

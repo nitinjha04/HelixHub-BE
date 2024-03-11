@@ -73,7 +73,6 @@ class UserController {
       role: user.role,
     });
     Response(res)
-      .status(201)
       .body({
         accessToken,
         refreshToken,
@@ -90,11 +89,13 @@ class UserController {
       req.body.password = hash;
     }
 
-    const user = await UserService.findByIdAndUpdate(req.user._id, {
+    const user = await UserService.findByIdAndUpdate(req.params.id, {
       ...req.body,
     });
 
-    if (!user) throw new HttpError(409, "User doesn't Exists!");
+    if (!user) {
+      throw new HttpError(409, "User doesn't Exists!");
+    }
 
     Response(res).status(201).message("Successfully Updated!").send();
   };
@@ -103,8 +104,9 @@ class UserController {
     Response(res).status(201).message("Successfully Created").send();
   };
   getCurrentUser = async (req, res) => {
-    const user = await UserService.findById(req.user._id);
-    Response(res).body(user).send();
+    const user = await UserService.findById(req.user._id).lean();
+    const { updatedAt, createdAt, password, ...safeUser } = user;
+    Response(res).body(safeUser).send();
   };
   getAllUsers = async (req, res) => {
     const user = await UserService.find({
