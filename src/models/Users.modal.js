@@ -71,6 +71,9 @@ const Schema = new mongoose.Schema(
     universityCity: {
       type: String,
     },
+    grade: {
+      type: String,
+    },
   },
   {
     timestamps: true,

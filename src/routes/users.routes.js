@@ -7,10 +7,11 @@ const router = express.Router();
 //get requests
 router.get("/", [Auth], UserController.getAllUsers);
 router.get("/own", [Auth], UserController.getCurrentUser);
-router.get("/:userId", [Auth], UserController.getUserDetails);
+router.get("/:id", [Auth], UserController.getUserDetails);
 
 //post requests
 router.post("/login", UserController.loginViaPassword);
+router.post("/createUser", UserController.createUserWithoutPassword);
 router.post("/register", UserController.createNewUser);
 
 //put requests

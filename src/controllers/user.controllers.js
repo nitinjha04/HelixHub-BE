@@ -47,6 +47,21 @@ class UserController {
       })
       .send();
   };
+  createUserWithoutPassword = async (req, res) => {
+    const checkUser = await UserService.findOne({ email: req.body.email });
+    if (checkUser) {
+      throw new HttpError(401, "User Already Exists");
+    }
+
+    const user = await UserService.create({ ...req.body });
+
+    Response(res)
+      .status(201)
+      .body({
+        _id: user._id,
+      })
+      .send();
+  };
 
   loginViaPassword = async (req, res, next) => {
     const { email, password } = req.body;
@@ -115,8 +130,8 @@ class UserController {
     Response(res).body(user).send();
   };
   getUserDetails = async (req, res) => {
-    const { userId } = req.params;
-    const user = await UserService.findById(userId);
+    const { id } = req.params;
+    const user = await UserService.findById(id);
     if (!user) throw new HttpError(400, "No User Exists!");
 
     Response(res).body(user).send();
