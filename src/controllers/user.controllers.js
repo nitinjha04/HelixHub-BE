@@ -66,17 +66,16 @@ class UserController {
   loginViaPassword = async (req, res, next) => {
     const { email, password } = req.body;
 
-    let user = await UserService.findOne({ email });
+    const user = await UserService.findOne({ email });
 
     if (!user) {
       throw new HttpError(404, "User Not Found");
     }
 
-    const { generateRefreshToken, generateToken } = user.schema.methods;
-
     const isVerify = await HasherHelper.compare(password, user.password);
     if (!isVerify) throw new HttpError(401, "Invalid Credentials");
 
+    const { generateRefreshToken, generateToken } = user.schema.methods;
     const accessToken = generateToken({
       _id: user._id,
       email: user.email,

@@ -9,6 +9,10 @@ const fileUploadMiddleware = (req, res, next) => {
     ? upload.array("files")
     : upload.single("file");
 
+  console.log("----------------------------------");
+  console.log(req);
+  console.log("----------------------------------");
+
   uploadMiddleware(req, res, async (err) => {
     try {
       if (err instanceof multer.MulterError) {
@@ -23,13 +27,17 @@ const fileUploadMiddleware = (req, res, next) => {
 
       // Check if files were uploaded
       if (!req.files && !req.file) {
+        console.error("No files uploaded");
         return res.status(400).json({ message: "No files uploaded" });
       }
 
       // Upload files to Cloudinary and get URLs
       const fileUrls = await Promise.all(
         (req.files || [req.file]).map(async (file) => {
-          const result = await uploadOnCloudinary(file.buffer, "uploads");
+          // const result = await uploadOnCloudinary(file.buffer, "uploads");
+          console.log("----------------------------------");
+          console.log(file.buffer);
+          console.log("----------------------------------");
           return { url: result.secure_url, publicId: result.public_id };
         })
       );

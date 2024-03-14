@@ -1,6 +1,7 @@
 const express = require("express");
 const { UserController } = require("../controllers/user.controllers");
 const { Auth } = require("../middlewares/auth.middlewares");
+const fileUploadMiddleware = require("../middlewares/file-upload.middlewares");
 
 const router = express.Router();
 
@@ -11,10 +12,14 @@ router.get("/:id", [Auth], UserController.getUserDetails);
 
 //post requests
 router.post("/login", UserController.loginViaPassword);
-router.post("/createUser", UserController.createUserWithoutPassword);
+router.post(
+  "/createUser",
+  fileUploadMiddleware,
+  UserController.createUserWithoutPassword
+);
 router.post("/register", UserController.createNewUser);
 
 //put requests
-router.put("/update/:id",  UserController.editCurrentUser);
+router.put("/update/:id", fileUploadMiddleware, UserController.editCurrentUser);
 
 module.exports.UserRouter = router;

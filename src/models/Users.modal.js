@@ -27,6 +27,9 @@ const Schema = new mongoose.Schema(
         type: String,
       },
     },
+    password: {
+      type: String,
+    },
     dob: {
       type: String,
     },
@@ -56,22 +59,35 @@ const Schema = new mongoose.Schema(
     parentAddress: {
       type: String,
     },
-    university: {
-      type: String,
-    },
-    degreeStartDate: {
-      type: String,
-    },
-    degreeEndDate: {
-      type: String,
-    },
-    degree: {
-      type: String,
-    },
-    universityCity: {
-      type: String,
-    },
+    education: [
+      {
+        university: {
+          type: String,
+        },
+        universityCity: {
+          type: String,
+        },
+        degree: {
+          type: String,
+        },
+        degreeStartDate: {
+          type: String,
+        },
+        degreeEndDate: {
+          type: String,
+        },
+      },
+    ],
     grade: {
+      type: String,
+    },
+    about: {
+      type: String,
+    },
+    expertise: {
+      type: String,
+    },
+    subject: {
       type: String,
     },
   },
