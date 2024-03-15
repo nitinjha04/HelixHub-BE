@@ -47,22 +47,6 @@ class UserController {
       })
       .send();
   };
-  createUserWithoutPassword = async (req, res) => {
-    const checkUser = await UserService.findOne({ email: req.body.email });
-    if (checkUser) {
-      throw new HttpError(401, "User Already Exists");
-    }
-
-    const user = await UserService.create({ ...req.body });
-
-    Response(res)
-      .status(201)
-      .body({
-        _id: user._id,
-      })
-      .send();
-  };
-
   loginViaPassword = async (req, res, next) => {
     const { email, password } = req.body;
 
@@ -94,6 +78,39 @@ class UserController {
       })
       .send();
   };
+  getCurrentUser = async (req, res) => {
+    const user = await UserService.findById(req.user._id).lean();
+    const { updatedAt, createdAt, password, ...safeUser } = user;
+    Response(res).body(safeUser).send();
+  };
+  getAllUsers = async (req, res) => {
+    const user = await UserService.find({
+      _id: { $nin: [req.user._id] },
+    }).sort({ createdAt: -1 });
+    Response(res).body(user).send();
+  };
+  getUserDetails = async (req, res) => {
+    const { id } = req.params;
+    const user = await UserService.findById(id);
+    if (!user) throw new HttpError(400, "No User Exists!");
+
+    Response(res).body(user).send();
+  };
+  createUserWithoutPassword = async (req, res) => {
+    const checkUser = await UserService.findOne({ email: req.body.email });
+    if (checkUser) {
+      throw new HttpError(401, "User Already Exists");
+    }
+
+    const user = await UserService.create({ ...req.body });
+
+    Response(res)
+      .status(201)
+      .body({
+        _id: user._id,
+      })
+      .send();
+  };
   editCurrentUser = async (req, res) => {
     if (req.body.password) {
       const salt = await HasherHelper.getSalt(10);
@@ -116,24 +133,6 @@ class UserController {
   createAdminUser = async (req, res) => {
     await UserService.create({ ...req.body, role: "Admin" });
     Response(res).status(201).message("Successfully Created").send();
-  };
-  getCurrentUser = async (req, res) => {
-    const user = await UserService.findById(req.user._id).lean();
-    const { updatedAt, createdAt, password, ...safeUser } = user;
-    Response(res).body(safeUser).send();
-  };
-  getAllUsers = async (req, res) => {
-    const user = await UserService.find({
-      _id: { $nin: [req.user._id] },
-    }).sort({ createdAt: -1 });
-    Response(res).body(user).send();
-  };
-  getUserDetails = async (req, res) => {
-    const { id } = req.params;
-    const user = await UserService.findById(id);
-    if (!user) throw new HttpError(400, "No User Exists!");
-
-    Response(res).body(user).send();
   };
 }
 

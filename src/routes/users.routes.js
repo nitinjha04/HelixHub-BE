@@ -14,12 +14,12 @@ router.get("/:id", [Auth], UserController.getUserDetails);
 router.post("/login", UserController.loginViaPassword);
 router.post(
   "/createUser",
-  fileUploadMiddleware,
+  
   UserController.createUserWithoutPassword
 );
 router.post("/register", UserController.createNewUser);
 
 //put requests
-router.put("/update/:id", fileUploadMiddleware, UserController.editCurrentUser);
+router.put("/update/:id",  UserController.editCurrentUser);
 
 module.exports.UserRouter = router;
