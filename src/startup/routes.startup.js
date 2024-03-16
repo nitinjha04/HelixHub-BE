@@ -8,6 +8,7 @@ const { default: axios } = require("axios");
 
 //Routers
 const { UserRouter } = require("../routes/users.routes");
+const { MessageRouter } = require("../routes/message.routes");
 
 module.exports = (app) => {
   app.use(express.json({ limit: "9999000009mb" }));
@@ -18,6 +19,7 @@ module.exports = (app) => {
 
   //start of routes
   app.use("/api/user", UserRouter);
+  app.use("/api/chat", MessageRouter);
 
   // handling async errors in api routes
   app.use(ErrorHandler);

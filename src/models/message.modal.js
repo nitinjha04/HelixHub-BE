@@ -3,9 +3,15 @@ const mongoose = require("mongoose");
 const Schema = new mongoose.Schema(
   {
     message: {
-      text: { type: String, require: true },
+      text: { type: String, required: true },
     },
-    users: Array,
+    // users: Array,
+
+    receiver: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     sender: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -17,4 +23,4 @@ const Schema = new mongoose.Schema(
   }
 );
 
-exports.User = mongoose.model("Message", Schema);
+exports.Message = mongoose.model("Message", Schema);

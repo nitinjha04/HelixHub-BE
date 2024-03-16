@@ -18,19 +18,30 @@ module.exports = async (app) => {
   });
 
   console.log("-----------");
-
+  global.onlineUsers = new Map();
   io.on("connection", (socket) => {
-    console.log("A user connected:", socket.id);
-
-    // Handle chat events, etc.
-    socket.on("send_msg", (msg) => {
-      console.log("Message:", msg);
-      io.emit("receive_msg", msg); // Broadcast the message to all connected clients
+    global.chatSocket = socket;
+    socket.on("add-user", (userId) => {
+      onlineUsers.set(userId, socket.id);
+      console.log("user added", userId);
     });
 
-    // Handle disconnect event
-    socket.on("disconnect", () => {
-      console.log("User disconnected:", socket.id);
+    socket.on("send-msg", (data) => {
+      const sendUserSocket = onlineUsers.get(data.receiver);
+      console.log("-----------");
+
+      console.log("sendUserSocket", data.receiver);
+      console.log("sendUserSocket", sendUserSocket);
+      console.log("-----------");
+
+      if (sendUserSocket) {
+        socket.to(sendUserSocket).emit("msg-receive", {
+          sender: data.sender,
+          message: { text: data.message },
+        });
+        console.log("sent to", data);
+        console.log("user message", { message: data.message });
+      }
     });
   });
 
