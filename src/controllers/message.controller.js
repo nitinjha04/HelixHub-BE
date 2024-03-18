@@ -3,8 +3,9 @@ const Response = require("../helpers/Response.helpers");
 const { MessageService } = require("../services/message.service");
 
 class MessageController {
-  getAllMessages = async (req, res) => {
-    const id = req.user._id;
+  getLatestMessage = async (req, res) => {
+    // const id = new mongoose.Types.ObjectId("65ef39ac133b88ab840d104a");
+    const id = new mongoose.Types.ObjectId(req.user._id);
     const messages = await MessageService.aggregate([
       {
         $match: {
@@ -28,14 +29,27 @@ class MessageController {
       {
         $lookup: {
           from: "users", // Assuming the collection name is "users"
-          localField: "oppositeUserId",
+          localField: "oppositeUser",
           foreignField: "_id",
           as: "oppositeUserDetails",
         },
       },
+      {
+        $sort: { createdAt: -1 }, // Sort messages by createdAt in descending order
+      },
+      {
+        $group: {
+          _id: "$oppositeUser",
+          latestMessage: { $first: "$$ROOT" }, // Select the latest message for each opposite user
+        },
+      },
+      {
+        $replaceRoot: { newRoot: "$latestMessage" }, // Replace root with the latest message
+      },
     ]).sort({ createdAt: -1 });
+
     // .populate("sender");
-    Response(res).body({ messages }).send();
+    Response(res).body(messages).send();
   };
 
   getMessage = async (req, res) => {

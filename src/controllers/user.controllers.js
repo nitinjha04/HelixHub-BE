@@ -8,9 +8,6 @@ const { JWT_EMAIL_VERIFY_SECRET } = process.env;
 class UserController {
   createNewUser = async (req, res) => {
     const checkUser = await UserService.findOne({ email: req.body.email });
-    console.log("---------------------");
-    console.log(req.body);
-    console.log("---------------------");
 
     if (checkUser) {
       throw new HttpError(401, "User Already Exists");

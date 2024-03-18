@@ -17,30 +17,22 @@ module.exports = async (app) => {
     },
   });
 
-  console.log("-----------");
   global.onlineUsers = new Map();
   io.on("connection", (socket) => {
     global.chatSocket = socket;
     socket.on("add-user", (userId) => {
       onlineUsers.set(userId, socket.id);
-      console.log("user added", userId);
     });
 
     socket.on("send-msg", (data) => {
       const sendUserSocket = onlineUsers.get(data.receiver);
-      console.log("-----------");
 
-      console.log("sendUserSocket", data.receiver);
-      console.log("sendUserSocket", sendUserSocket);
-      console.log("-----------");
 
       if (sendUserSocket) {
         socket.to(sendUserSocket).emit("msg-receive", {
           sender: data.sender,
           message: { text: data.message },
         });
-        console.log("sent to", data);
-        console.log("user message", { message: data.message });
       }
     });
   });
