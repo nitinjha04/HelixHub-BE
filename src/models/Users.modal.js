@@ -112,18 +112,6 @@ Schema.pre("save", async function (next) {
   next();
 });
 
-// const virtual = Schema.virtual("id");
-// virtual.get(function () {
-//   return this._id;
-// });
-// Schema.set("toJSON", {
-//   virtuals: true,
-//   versionKey: false,
-//   transform: function (doc, ret) {
-//     delete ret._id;
-//   },
-// });
-
 Schema.methods.comparePassword = function (candidatePassword) {
   return new Promise((resolve, reject) => {
     Hasher.compare(candidatePassword, this.password)

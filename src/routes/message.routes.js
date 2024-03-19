@@ -6,7 +6,6 @@ const router = express.Router();
 
 // get request
 router.get(`/getLatestMessage`, [Auth], MessageController.getLatestMessage);
-// router.get("/getAll", MessageController.getAllMessages);
 
 // post request
 router.post("/get", [Auth], MessageController.getMessage);
