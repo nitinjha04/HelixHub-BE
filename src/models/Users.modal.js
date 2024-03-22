@@ -90,6 +90,17 @@ const Schema = new mongoose.Schema(
     subject: {
       type: String,
     },
+    role: {
+      type: String,
+      enum: ["Student", "Admin", "Teacher"],
+      default: "Student",
+    },
+    payments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Payment",
+      },
+    ],
   },
   {
     timestamps: true,
